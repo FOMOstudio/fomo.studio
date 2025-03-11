@@ -8,67 +8,89 @@ import {
   HelpCircleIcon,
   AwardIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { FormEvent } from "react";
 import { PromptSuggestion } from "../ui/prompt-suggestion";
-import {
-  PromptInput,
-  PromptInputActions,
-  PromptInputTextarea,
-} from "../ui/prompt-input";
+import { Textarea } from "@/components/ui/textarea";
 
-export function MainPromptInput() {
-  const [inputValue, setInputValue] = useState("");
+type MainPromptInputProps = {
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+};
 
-  const handleSend = () => {
-    if (inputValue.trim()) {
-      console.log("Sending:", inputValue);
-      setInputValue("");
-    }
+export function MainPromptInput({
+  value,
+  onChange,
+  onSubmit,
+}: MainPromptInputProps) {
+  const handleSuggestionClick = (suggestion: string) => {
+    onChange(suggestion);
   };
 
   return (
     <div className="flex w-full flex-col space-y-4">
       <div className="flex flex-wrap gap-2 my-10">
-        <PromptSuggestion onClick={() => setInputValue("Pricing")}>
+        <PromptSuggestion onClick={() => handleSuggestionClick("Pricing")}>
           <DollarSignIcon className="text-primary/60 mr-2" />
           Pricing
         </PromptSuggestion>
 
-        <PromptSuggestion onClick={() => setInputValue("Book an intro call")}>
+        <PromptSuggestion
+          onClick={() => handleSuggestionClick("Book an intro call")}
+        >
           <CalendarIcon className="text-primary/60 mr-2" />
           Book an intro call
         </PromptSuggestion>
 
-        <PromptSuggestion onClick={() => setInputValue("How does we work?")}>
+        <PromptSuggestion
+          onClick={() => handleSuggestionClick("How do we work?")}
+        >
           <HelpCircleIcon className="text-primary/60 mr-2" />
           How do we work?
         </PromptSuggestion>
 
-        <PromptSuggestion onClick={() => setInputValue("Why using us?")}>
+        <PromptSuggestion
+          onClick={() => handleSuggestionClick("Why working with us?")}
+        >
           <AwardIcon className="text-primary/60 mr-2" />
           Why working with us?
         </PromptSuggestion>
       </div>
 
-      <PromptInput
-        className="border-input bg-background border shadow-xs"
-        value={inputValue}
-        onValueChange={setInputValue}
-        onSubmit={handleSend}
+      <form
+        onSubmit={onSubmit}
+        className="border-input bg-background rounded-xl rounded-br-3xl border p-2 shadow-xs"
       >
-        <PromptInputTextarea placeholder="Type a message or click a suggestion..." />
-        <PromptInputActions className="justify-end">
-          <Button
-            size="sm"
-            className="size-9 cursor-pointer rounded-full"
-            onClick={handleSend}
-            disabled={!inputValue.trim()}
-            aria-label="Send"
-          >
-            <ArrowUpIcon className="h-4 w-4" />
-          </Button>
-        </PromptInputActions>
-      </PromptInput>
+        <div className="flex items-center">
+          <Textarea
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="Type a message or click a suggestion..."
+            className="text-primary min-h-[44px] w-full resize-none border-none bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            rows={1}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                const form = e.currentTarget.form;
+                if (form && value.trim()) {
+                  form.requestSubmit();
+                }
+              }
+            }}
+          />
+          <div className="flex items-center justify-end">
+            <Button
+              type="submit"
+              size="sm"
+              className="size-9 cursor-pointer rounded-full"
+              disabled={!value.trim()}
+              aria-label="Send"
+            >
+              <ArrowUpIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }

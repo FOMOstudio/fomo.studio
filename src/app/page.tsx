@@ -3,7 +3,7 @@
 import { AnimatedIntro } from "@/components/animated-intro";
 import { cn } from "@/lib/utils";
 import { TopBar } from "@/components/top-bar";
-import { MainPromptInput } from "@/components/ai-chat/main-prompt-input";
+import { AIChat } from "@/components/ai-chat";
 
 export default function Landing() {
   return (
@@ -29,7 +29,7 @@ export default function Landing() {
             <br />
             help you ship beautiful, polished and useful AI products.
           </h2>
-          <MainPromptInput />
+          <AIChat />
         </div>
       </div>
     </>
