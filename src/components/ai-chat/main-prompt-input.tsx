@@ -1,7 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowUpIcon } from "lucide-react";
+import {
+  ArrowUpIcon,
+  DollarSignIcon,
+  CalendarIcon,
+  HelpCircleIcon,
+  AwardIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { PromptSuggestion } from "../ui/prompt-suggestion";
 import {
@@ -24,17 +30,22 @@ export function MainPromptInput() {
     <div className="flex w-full flex-col space-y-4">
       <div className="flex flex-wrap gap-2 my-10">
         <PromptSuggestion onClick={() => setInputValue("Pricing")}>
+          <DollarSignIcon className="text-primary/60 mr-2" />
           Pricing
         </PromptSuggestion>
 
         <PromptSuggestion onClick={() => setInputValue("Book an intro call")}>
+          <CalendarIcon className="text-primary/60 mr-2" />
           Book an intro call
         </PromptSuggestion>
 
         <PromptSuggestion onClick={() => setInputValue("How does we work?")}>
+          <HelpCircleIcon className="text-primary/60 mr-2" />
           How do we work?
         </PromptSuggestion>
+
         <PromptSuggestion onClick={() => setInputValue("Why using us?")}>
+          <AwardIcon className="text-primary/60 mr-2" />
           Why working with us?
         </PromptSuggestion>
       </div>
