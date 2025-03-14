@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Markdown } from "../ai-chat/markdown";
+import { Markdown } from "./markdown";
 
 export type MessageProps = {
   children: React.ReactNode;

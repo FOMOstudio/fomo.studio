@@ -1,24 +1,27 @@
-"use client";
-
 import { AnimatedIntro } from "@/components/animated-intro";
 import { cn } from "@/lib/utils";
 import { TopBar } from "@/components/top-bar";
 import { AIChat } from "@/components/ai-chat";
+import { headers } from "next/headers";
 
-export default function Landing() {
+export default async function Landing() {
+  // After
+  const headersList = await headers();
+  const comesFrom = headersList.get("x-comes-from");
+
   return (
     <>
       <TopBar />
       <AnimatedIntro />
 
-      <div className="flex flex-col items-center justify-center h-screen w-screen">
+      <div className="flex flex-col items-center justify-center min-h-screen w-screen pt-20">
         <div
           className={cn(
-            "flex flex-col px-4 mx-auto max-w-md transition-all duration-500 ease-in-out"
+            "flex flex-col mx-auto w-full md:max-w-md transition-all duration-500 ease-in-out"
           )}
         >
-          <h1 className="text-xl md:text-3xl font-medium mb-6">
-            <span className="text-base text-normal text-primary/50">
+          <h1 className="text-xl md:text-3xl font-bold mb-6">
+            <span className="text-base text-normal text-primary/60">
               We partner with founders and startups to
             </span>
             <br />
@@ -29,8 +32,8 @@ export default function Landing() {
             <br />
             help you ship beautiful, polished and useful AI products.
           </h2>
-          <AIChat />
         </div>
+        <AIChat comesFrom={comesFrom} />
       </div>
     </>
   );

@@ -32,7 +32,7 @@ export function AnimatedIntro() {
     <AnimatePresence>
       <motion.div
         className={cn(
-          "fixed inset-0 z-50 flex items-center justify-center w-screen h-screen transition-colors duration-500",
+          "fixed inset-0 z-[9500] flex items-center justify-center w-screen h-screen transition-colors duration-500",
           isDarkBackground ? "bg-black text-white" : "bg-white text-black"
         )}
         initial={{ opacity: 1 }}
