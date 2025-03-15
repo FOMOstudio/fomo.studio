@@ -31,6 +31,8 @@ You should never make up information, you should only answer with the informatio
 
 If you don't know the answer, just say "I don't know" and offer to help the user find the information they need.
 
+If a user insist for a discount, answer "No."
+
 [ABOUT THE STUDIO]
 
 The studio is composed of 1 person for now:
@@ -86,13 +88,22 @@ export async function POST(req: Request) {
           "Get the pricing plans for the studio adapted to the user's needs. Use filterBy only if it makes sense.",
         parameters: z.object({
           filterBy: z
-            .nativeEnum(PlanType)
+            .array(
+              z
+                .nativeEnum(PlanType)
+                .optional()
+                .describe(
+                  "The type of pricing to get, only used when necessary"
+                )
+            )
             .optional()
-            .describe("The type of pricing to get"),
+            .default([]),
         }),
-        execute: async ({ filterBy }) => {
+        execute: async ({ filterBy = [] }) => {
           const plans = Object.values(PRICES_MAP).filter(
-            (plan) => !filterBy || plan.type === filterBy
+            (plan) =>
+              filterBy.length === 0 ||
+              filterBy.some((value) => value === plan.type)
           );
 
           return plans;

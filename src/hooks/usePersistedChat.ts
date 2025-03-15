@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useChat, Message, UseChatOptions } from "@ai-sdk/react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
@@ -9,45 +9,21 @@ interface UsePersistedChatOptions
 }
 
 export function usePersistedChat(options?: UsePersistedChatOptions) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingData, setIsLoading] = useState(true);
 
   // Fetch messages from IndexedDB
   const storedMessages = useLiveQuery(() => db.messages.toArray(), [], []);
 
   // Initialize chat with stored messages or fallback
-  const { messages, handleInputChange, handleSubmit, input } = useChat({
+  const { status, append, setMessages } = useChat({
     ...options,
     initialMessages: storedMessages?.length
       ? storedMessages
       : options?.fallbackInitialMessages || [],
+    async onFinish(message) {
+      await db.messages.put(message);
+    },
   });
-
-  // Sync messages to IndexedDB whenever they change
-  useEffect(() => {
-    // Only sync completed messages to avoid issues with streaming
-    if (!isLoading && messages.length > 0) {
-      const syncMessages = async () => {
-        try {
-          // Get existing message IDs
-          const existingIds = new Set(
-            (await db.messages.toArray()).map((m) => m.id)
-          );
-
-          // Add new messages to the database, but only if they're complete (not streaming)
-          const newMessages = messages.filter((m) => !existingIds.has(m.id));
-
-          if (newMessages.length > 0) {
-            // Use bulkPut instead of bulkAdd to handle duplicate keys
-            await db.messages.bulkPut(newMessages);
-          }
-        } catch (error) {
-          console.error("Error syncing messages to IndexedDB:", error);
-        }
-      };
-
-      syncMessages();
-    }
-  }, [messages, isLoading]);
 
   // Set loading to false once we have the initial data
   useEffect(() => {
@@ -59,20 +35,40 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
   // Method to reset the chat history
   const resetChatHistory = useCallback(async () => {
     await db.resetMessages();
+    setMessages([]);
     // Reset the chat state to initial state
     if (options?.fallbackInitialMessages) {
       // Add the fallback messages to the database
       // Use put instead of add to handle potential duplicate keys
       await db.messages.bulkPut(options.fallbackInitialMessages);
     }
-  }, [options?.fallbackInitialMessages]);
+  }, [options?.fallbackInitialMessages, setMessages]);
+
+  const handleSubmit = async (messageContent: string) => {
+    const messageId = `user-${Date.now().toString()}`;
+
+    const message: Message = {
+      content: messageContent,
+      id: messageId,
+      role: "user",
+      createdAt: new Date(),
+    };
+
+    await Promise.all([append(message), db.messages.put(message)]);
+  };
+
+  const sortedMessages = useMemo(() => {
+    return storedMessages?.sort((a, b) => {
+      if (!a.createdAt || !b.createdAt) return 0;
+      return a.createdAt.getTime() - b.createdAt.getTime();
+    });
+  }, [storedMessages]);
 
   return {
-    messages,
-    isLoading,
+    messages: sortedMessages,
+    isLoadingData,
     resetChatHistory,
-    handleInputChange,
     handleSubmit,
-    input,
+    isMessageLoading: status === "streaming" || status === "submitted",
   };
 }

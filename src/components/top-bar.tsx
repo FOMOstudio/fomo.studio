@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ProgressiveBlur } from "../../components/motion-primitives/progressive-blur";
+import { ProgressiveBlur } from "./progressive-blur";
 
 export function TopBar() {
   return (
@@ -24,10 +24,10 @@ export function TopBar() {
       />
       <div className="fixed left-0 right-0 top-0 z-[9400] flex items-center h-14">
         <div className="flex items-center justify-between mx-auto w-full md:max-w-md">
-          <span className="text-lg font-bold relative">
+          {/* <span className="text-lg font-bold relative">
             FOMO
             <span> *</span>
-          </span>
+          </span> */}
         </div>
       </div>
     </>

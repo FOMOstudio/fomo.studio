@@ -6,21 +6,28 @@ export enum PlanType {
 export type Plan = {
   type: PlanType;
   price: string;
-  interval: "month" | null;
+  interval: "monthly" | null;
   features: string[];
+  title: string;
+  description: string;
 };
 
 export const PRICES_MAP: Record<PlanType, Plan> = {
   [PlanType.MVP]: {
     type: PlanType.MVP,
-    price: "$10,000",
+    price: "$10,000 One-time",
     interval: null,
-    features: ["feature 1", "feature 2", "feature 3"],
+    title: "MVP",
+    description:
+      "Perfect for those who want to get their product out there quickly.",
+    features: ["Code & Design", "Deployed and ready to go", "Feature-complete"],
   },
   [PlanType.CUSTOM]: {
     type: PlanType.CUSTOM,
-    price: "Starts at $8,000",
-    interval: "month",
-    features: ["feature 1", "feature 2", "feature 3"],
+    price: "Starts at $8,000/month",
+    interval: "monthly",
+    title: "Product",
+    description: "Perfect for those with ongoing needs and need for growth.",
+    features: ["Pause anytime", "No lock-in", "No commitment"],
   },
 };

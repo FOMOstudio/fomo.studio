@@ -14,27 +14,21 @@ export default async function Landing() {
       <TopBar />
       <AnimatedIntro />
 
-      <div className="flex flex-col items-center justify-center min-h-screen w-screen pt-20">
+      <div className="flex flex-col items-center justify-center min-h-[20vh] w-screen pt-20">
         <div
           className={cn(
-            "flex flex-col mx-auto w-full md:max-w-md transition-all duration-500 ease-in-out"
+            "flex flex-col mx-auto w-full md:max-w-md transition-all duration-500 ease-in-out px-6 md:px-0"
           )}
         >
-          <h1 className="text-xl md:text-3xl font-bold mb-6">
-            <span className="text-base text-normal text-primary/60">
-              We partner with founders and startups to
-            </span>
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 text-primary/60 text-balance md:leading-normal">
+            Stop vibe coding.
             <br />
-            Ship cool AI experiences.
+            Do not <span className="text-primary">Fomo</span>.<br />
+            We will ship it for you.
           </h1>
-          <h2 className="text-base text-primary/80 mb-8 text-balance">
-            Playing with AI tools can only bring you so far, we will
-            <br />
-            help you ship beautiful, polished and useful AI products.
-          </h2>
         </div>
-        <AIChat comesFrom={comesFrom} />
       </div>
+      <AIChat comesFrom={comesFrom} />
     </>
   );
 }
