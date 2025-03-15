@@ -105,7 +105,7 @@ export function MainPromptInput({
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="Type a message or click a suggestion..."
                 cols={1}
-                className="text-primary flex-1 h-fit resize-none border-none bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-full mt-1"
+                className="text-primary flex-1 h-fit resize-none border-none bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-full mt-2"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -121,7 +121,7 @@ export function MainPromptInput({
               <Button
                 type="submit"
                 size="sm"
-                className="size-8 cursor-pointer rounded-full"
+                className="size-10 cursor-pointer rounded-full mb-0.5"
                 disabled={!value.trim()}
                 aria-label="Send"
                 onClick={() => {
@@ -143,7 +143,7 @@ export function MainPromptInput({
             variant="ghost"
             size="sm"
             onClick={onResetChatHistory}
-            className="z-[1600]"
+            className="z-[1600] w-fit mx-auto"
           >
             Reset chat
           </Button>
