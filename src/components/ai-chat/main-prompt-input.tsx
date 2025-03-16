@@ -12,6 +12,7 @@ import { PromptSuggestion } from "./prompt-suggestion";
 import TextareaAutosize from "react-textarea-autosize";
 import { ProgressiveBlur } from "../progressive-blur";
 import { cn } from "@/lib/utils";
+import { useHotkeys } from "react-hotkeys-hook";
 
 type MainPromptInputProps = {
   value: string;
@@ -39,6 +40,16 @@ export function MainPromptInput({
       onChange(suggestion);
     }
   };
+
+  useHotkeys(
+    "mod+enter",
+    () => {
+      onSubmit(value);
+    },
+    {
+      enableOnFormTags: ["textarea"],
+    }
+  );
 
   return (
     <>
@@ -137,7 +148,7 @@ export function MainPromptInput({
           </div>
         </div>
       </div>
-      <div className="my-10 w-full flex flex-col justify-end">
+      <div className="mb-10 mt-4 w-full flex flex-col justify-end">
         {!hideResetButton && (
           <Button
             variant="ghost"
@@ -149,6 +160,7 @@ export function MainPromptInput({
           </Button>
         )}
       </div>
+      <div className="h-10 w-full" id="chat-input-anchor" />
     </>
   );
 }

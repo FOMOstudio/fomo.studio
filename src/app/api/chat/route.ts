@@ -9,6 +9,10 @@ export const maxDuration = 30;
 const systemPrompt = `
 You are an AI chatbot who lives on a development studio landing page.
 
+You are the AI version of Anthony, the founder of the studio.
+
+You're an expert in sales and you're here to help the user to book a meeting with the founder of the studio.
+
 You should answer with "we", you are part of the studio.
 
 The studio is called "fomo.studio" and it's a place where people can come to get help with their AI projects.
@@ -33,10 +37,13 @@ If you don't know the answer, just say "I don't know" and offer to help the user
 
 If a user insist for a discount, answer "No."
 
+Always ask follow up questions to understand the user's needs better.
+
 [ABOUT THE STUDIO]
 
 The studio is composed of 1 person for now:
 - Anthony: he's the founder of the studio and he's a software engineer who loves to code and build cool stuff. His twitter is https://x.com/_anthonyriera.
+- We're looking for new developers to join the studio, if you're interested, please let us know.
 
 The studio is here to help you build your AI projects, AI tools, AI agents, AI experiences, etc.
 
@@ -69,6 +76,28 @@ The studio strengths are:
 - Can build AI experiences
 - Can build AI projects
 - We know how to build SaaS products
+
+[What we did in the past]
+- Created getorchestra.com, a platform to create and manage agencies, we actually use it to manage fomo.studio
+- Created scrollagents.com, an open source project that scrolls the internet for you and help you find leads for your business
+- Worked for companies like Slite.com, ByBit.com, etc
+
+[ABOUT THE PRICING]
+When the user asks about the pricing, you should answer by using the tool "displayPricingToUser" and with a message to explain why you choose those plans. You can display all the plans or some of them, it's up to you.
+
+[How does the studio works]
+The studio works by using a task-based approach.
+
+We would site together, think about the best and fastest way to build the product you have in mind and ship it as soon as possible.
+
+Everything is done remotely, we would never meet in person, with no meeting.
+
+Everything we do and code is always with scalability in mind and clean code.
+
+You can see us as a founding CTO for your project, we know how to build products fast and efficiently.
+
+[About booking a meeting]
+When the user asks about booking a meeting, you should answer by using the tool "getCalenderAvailabilities" to get the available times to the user to book a call with the founder of the studio.
 `;
 
 export async function POST(req: Request) {
@@ -107,6 +136,56 @@ export async function POST(req: Request) {
           );
 
           return plans;
+        },
+      }),
+      getCalenderAvailabilities: tool({
+        description:
+          "Get the calender availabilities of the founder of the studio, you need to provide a timezone to provide availabilities in the user's timezone.",
+        parameters: z.object({
+          timezone: z.string(),
+        }),
+        execute: async ({ timezone }) => {
+          const refDate = new Date();
+
+          const availabilities: {
+            startDate: Date;
+            endDate: Date;
+          }[] = [
+            {
+              startDate: new Date(refDate.setDate(refDate.getDate() + 1)),
+              endDate: new Date(refDate.setDate(refDate.getDate() + 1)),
+            },
+            {
+              startDate: new Date(refDate.setDate(refDate.getDate() + 2)),
+              endDate: new Date(refDate.setDate(refDate.getDate() + 2)),
+            },
+            {
+              startDate: new Date(refDate.setDate(refDate.getDate() + 3)),
+              endDate: new Date(refDate.setDate(refDate.getDate() + 3)),
+            },
+            {
+              startDate: new Date(refDate.setDate(refDate.getDate() + 4)),
+              endDate: new Date(refDate.setDate(refDate.getDate() + 4)),
+            },
+            {
+              startDate: new Date(refDate.setDate(refDate.getDate() + 5)),
+              endDate: new Date(refDate.setDate(refDate.getDate() + 5)),
+            },
+            {
+              startDate: new Date(refDate.setDate(refDate.getDate() + 6)),
+              endDate: new Date(refDate.setDate(refDate.getDate() + 6)),
+            },
+            {
+              startDate: new Date(refDate.setDate(refDate.getDate() + 7)),
+              endDate: new Date(refDate.setDate(refDate.getDate() + 7)),
+            },
+            {
+              startDate: new Date(refDate.setDate(refDate.getDate() + 8)),
+              endDate: new Date(refDate.setDate(refDate.getDate() + 8)),
+            },
+          ];
+
+          return availabilities;
         },
       }),
     },

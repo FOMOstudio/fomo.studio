@@ -7,17 +7,20 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Markdown } from "./markdown";
+import { memo } from "react";
 
 export type MessageProps = {
   children: React.ReactNode;
   className?: string;
 } & React.HTMLProps<HTMLDivElement>;
 
-const Message = ({ children, className, ...props }: MessageProps) => (
+const Message = memo(({ children, className, ...props }: MessageProps) => (
   <div className={cn("flex items-start", className)} {...props}>
     {children}
   </div>
-);
+));
+
+Message.displayName = "Message";
 
 export type MessageAvatarProps = {
   src: string;
@@ -27,22 +30,20 @@ export type MessageAvatarProps = {
   className?: string;
 };
 
-const MessageAvatar = ({
-  src,
-  alt,
-  fallback,
-  delayMs,
-  className,
-}: MessageAvatarProps) => {
-  return (
-    <Avatar className={cn("h-8 w-8 shrink-0", className)}>
-      <AvatarImage src={src} alt={alt} />
-      {fallback && (
-        <AvatarFallback delayMs={delayMs}>{fallback}</AvatarFallback>
-      )}
-    </Avatar>
-  );
-};
+const MessageAvatar = memo(
+  ({ src, alt, fallback, delayMs, className }: MessageAvatarProps) => {
+    return (
+      <Avatar className={cn("h-8 w-8 shrink-0", className)}>
+        <AvatarImage src={src} alt={alt} />
+        {fallback && (
+          <AvatarFallback delayMs={delayMs}>{fallback}</AvatarFallback>
+        )}
+      </Avatar>
+    );
+  }
+);
+
+MessageAvatar.displayName = "MessageAvatar";
 
 export type MessageContentProps = {
   children: React.ReactNode;

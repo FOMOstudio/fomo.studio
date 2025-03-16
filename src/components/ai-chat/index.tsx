@@ -7,7 +7,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { usePersistedChat } from "@/hooks/usePersistedChat";
-import React, { useState } from "react";
+import React from "react";
 import { AIMessageToolDisplay } from "./tools";
 
 type Props = {
@@ -15,30 +15,35 @@ type Props = {
 };
 
 export function AIChat({ comesFrom }: Props) {
-  const [inputContent, setInputContent] = useState<string>("");
-  const { messages, handleSubmit, resetChatHistory, isMessageLoading } =
-    usePersistedChat({
-      fallbackInitialMessages: [
-        {
-          id: "1",
-          content: `Hi, wandered from ${comesFrom || "the internet"} 👋`,
-          role: "assistant",
-          createdAt: new Date(),
-        },
-        {
-          id: "2",
-          content: `Fomo is a studio that builds unique and polished AI experiences.`,
-          role: "assistant",
-          createdAt: new Date(),
-        },
-        {
-          id: "hmmm-3-I-guess",
-          content: `I'm here to talk about our studio, you can ask anything!`,
-          role: "assistant",
-          createdAt: new Date(),
-        },
-      ],
-    });
+  const {
+    messages,
+    handleSubmit,
+    resetChatHistory,
+    isMessageLoading,
+    inputContent,
+    setInputContent,
+  } = usePersistedChat({
+    fallbackInitialMessages: [
+      {
+        id: "1",
+        content: `Hi, wandered from ${comesFrom || "the internet"} 👋`,
+        role: "assistant",
+        createdAt: new Date(),
+      },
+      {
+        id: "2",
+        content: `Fomo is a studio that builds unique and polished AI experiences.`,
+        role: "assistant",
+        createdAt: new Date(),
+      },
+      {
+        id: "hmmm-3-I-guess",
+        content: `I'm here to talk about our studio, you can ask anything!`,
+        role: "assistant",
+        createdAt: new Date(),
+      },
+    ],
+  });
 
   const chatHasStarted = messages.length > 3;
 
@@ -145,7 +150,7 @@ export function AIChat({ comesFrom }: Props) {
               }}
             >
               <Message className="max-w-[80%] bg-muted rounded-2xl rounded-bl-sm">
-                <div className="flex items-center px-3 py-1.5 space-x-1">
+                <div className="flex items-center p-2 space-x-1">
                   <motion.div
                     className="size-1.5 bg-primary rounded-full"
                     animate={{ y: [0, -3, 0] }}

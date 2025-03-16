@@ -59,6 +59,9 @@ dependencies:
   react-dom:
     specifier: ^19.0.0
     version: 19.0.0(react@19.0.0)
+  react-hotkeys-hook:
+    specifier: ^4.6.1
+    version: 4.6.1(react-dom@19.0.0)(react@19.0.0)
   react-markdown:
     specifier: ^10.1.0
     version: 10.1.0(@types/react@19.0.10)(react@19.0.0)
@@ -3869,6 +3872,16 @@ packages:
     dependencies:
       react: 19.0.0
       scheduler: 0.25.0
+    dev: false
+
+  /react-hotkeys-hook@4.6.1(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-XlZpbKUj9tkfgPgT9gA+1p7Ey6vFIZHttUjPqpTdyT5nqQ8mHL7elxvSbaC+dpSiHUSmr21Ya1mDxBZG3aje4Q==}
+    peerDependencies:
+      react: '>=16.8.1'
+      react-dom: '>=16.8.1'
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
     dev: false
 
   /react-is@16.13.1:

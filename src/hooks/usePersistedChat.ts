@@ -8,7 +8,28 @@ interface UsePersistedChatOptions
   fallbackInitialMessages?: Message[];
 }
 
+const handleScrollToBottom = () => {
+  setTimeout(() => {
+    const element = document.getElementById("chat-input-anchor");
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+
+      window.scrollBy({
+        top: 100, // Adjust this value to control how much extra scroll you want
+        behavior: "smooth",
+      });
+    }
+  }, 100);
+};
+
 export function usePersistedChat(options?: UsePersistedChatOptions) {
+  const [inputContent, setInputContent] = useState<string>("");
+
   const [isLoadingData, setIsLoading] = useState(true);
 
   // Fetch messages from IndexedDB
@@ -22,6 +43,7 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
       : options?.fallbackInitialMessages || [],
     async onFinish(message) {
       await db.messages.put(message);
+      handleScrollToBottom();
     },
   });
 
@@ -54,7 +76,13 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
       createdAt: new Date(),
     };
 
+    handleScrollToBottom();
+
     await Promise.all([append(message), db.messages.put(message)]);
+
+    setInputContent("");
+
+    handleScrollToBottom();
   };
 
   const sortedMessages = useMemo(() => {
@@ -70,5 +98,7 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
     resetChatHistory,
     handleSubmit,
     isMessageLoading: status === "streaming" || status === "submitted",
+    inputContent,
+    setInputContent,
   };
 }
