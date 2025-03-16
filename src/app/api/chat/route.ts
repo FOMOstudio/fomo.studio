@@ -2,6 +2,9 @@ import { PlanType, PRICES_MAP } from "@/constants";
 import { openai } from "@ai-sdk/openai";
 import { smoothStream, streamText, tool } from "ai";
 import { z } from "zod";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+import { waitUntil } from "@vercel/functions";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -100,8 +103,36 @@ You can see us as a founding CTO for your project, we know how to build products
 When the user asks about booking a meeting, you should answer by using the tool "getCalenderAvailabilities" to get the available times to the user to book a call with the founder of the studio.
 `;
 
+// Create a new ratelimiter
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "10 s"),
+  prefix: "@upstash/ratelimit",
+  analytics: true,
+});
+
 export async function POST(req: Request) {
+  const identifier = "chat-api";
+
+  // Rate limit the request to 5 requests per 10 seconds
+  const { success, limit, remaining, pending } = await ratelimit.limit(
+    identifier
+  );
+
+  const response = {
+    success: success,
+    limit: limit,
+    remaining: remaining,
+  };
+
   const { messages } = await req.json();
+
+  // Send analytics to Upstash
+  waitUntil(pending);
+
+  if (!success) {
+    return new Response(JSON.stringify(response), { status: 429 });
+  }
 
   const result = streamText({
     model: openai("gpt-4o"),

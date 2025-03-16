@@ -13,10 +13,9 @@ import TextareaAutosize from "react-textarea-autosize";
 import { ProgressiveBlur } from "../progressive-blur";
 import { cn } from "@/lib/utils";
 import { useHotkeys } from "react-hotkeys-hook";
+import { memo, useState } from "react";
 
 type MainPromptInputProps = {
-  value: string;
-  onChange: (value: string) => void;
   onSubmit: (value: string) => void;
   hideShortcuts?: boolean;
   onShortcutClick?: (text: string) => void;
@@ -24,27 +23,35 @@ type MainPromptInputProps = {
   onResetChatHistory: () => void;
 };
 
-export function MainPromptInput({
-  value,
-  onChange,
+export const MainPromptInput = memo(function MainPromptInput({
   hideShortcuts = false,
   hideResetButton = true,
   onShortcutClick,
   onResetChatHistory,
   onSubmit,
 }: MainPromptInputProps) {
+  const [inputValue, setInputValue] = useState("");
+
   const handleSuggestionClick = (suggestion: string) => {
     if (onShortcutClick) {
       onShortcutClick(suggestion);
     } else {
-      onChange(suggestion);
+      setInputValue(suggestion);
+    }
+  };
+
+  const handleSubmit = () => {
+    const trimmedValue = inputValue.trim();
+    if (trimmedValue) {
+      onSubmit(trimmedValue);
+      setInputValue("");
     }
   };
 
   useHotkeys(
     "mod+enter",
     () => {
-      onSubmit(value);
+      handleSubmit();
     },
     {
       enableOnFormTags: ["textarea"],
@@ -112,18 +119,15 @@ export function MainPromptInput({
           <div className="md:max-w-md z-[1400] w-full flex gap-2">
             <div className="flex-1 border-input bg-background rounded-3xl border pl-3 shadow-xs pb-1">
               <TextareaAutosize
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Type a message or click a suggestion..."
                 cols={1}
                 className="text-primary flex-1 h-fit resize-none border-none bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-full mt-2"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    const form = e.currentTarget.form;
-                    if (form && value.trim()) {
-                      form.requestSubmit();
-                    }
+                    handleSubmit();
                   }
                 }}
               />
@@ -133,14 +137,9 @@ export function MainPromptInput({
                 type="submit"
                 size="sm"
                 className="size-10 cursor-pointer rounded-full mb-0.5"
-                disabled={!value.trim()}
+                disabled={!inputValue.trim()}
                 aria-label="Send"
-                onClick={() => {
-                  const valueToSubmit = value.trim();
-                  if (valueToSubmit) {
-                    onSubmit(valueToSubmit);
-                  }
-                }}
+                onClick={handleSubmit}
               >
                 <ArrowUpIcon className="h-4 w-4" />
               </Button>
@@ -163,4 +162,4 @@ export function MainPromptInput({
       <div className="h-10 w-full" id="chat-input-anchor" />
     </>
   );
-}
+});
