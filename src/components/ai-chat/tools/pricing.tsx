@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Plan } from "@/constants";
+import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 
 type Props = {
@@ -31,10 +32,22 @@ export function PricingTool({ plans, messageId, partIndex, callId }: Props) {
         }}
         key={`${messageId}-part-${partIndex}-${callId}-result`}
       >
-        <div className="w-full md:w-fit md:h-fit flex flex-col md:flex-row gap-3 mx-auto mb-3">
+        <div
+          className={cn(
+            "w-full md:w-fit md:h-fit flex flex-col md:flex-row gap-3 mx-auto",
+            {
+              "md:max-w-md md:w-full mx-auto": plans.length === 1,
+            }
+          )}
+        >
           {plans.map((plan) => (
             <div
-              className="w-full md:w-88 min-w-68 rounded-xl flex flex-col gap-4 justify-between p-4 bg-primary/5"
+              className={cn(
+                "w-full md:w-88 min-w-68 rounded-xl flex flex-col gap-4 justify-between p-4 bg-primary/5",
+                {
+                  "md:w-[80%]": plans.length === 1,
+                }
+              )}
               key={`${messageId}-part-${partIndex}-plan-${plan.type}-${plan.interval}`}
             >
               <div className="flex items-center gap-2">

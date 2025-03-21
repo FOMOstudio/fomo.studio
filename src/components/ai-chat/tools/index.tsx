@@ -4,6 +4,8 @@ import { Plan } from "@/constants";
 import { Message } from "@ai-sdk/react";
 import React from "react";
 import { PricingTool } from "./pricing";
+import { ButtonTool } from "./button-tool";
+import { CalMeetingSlotsTool, Slots } from "./cal-meeting-slots";
 
 type Props = {
   messageId: string;
@@ -26,7 +28,7 @@ export function AIMessageToolDisplay({ messageParts, messageId }: Props) {
         const callId = toolInvocation.toolCallId;
 
         switch (toolInvocation.toolName) {
-          case "displayPricingToUser": {
+          case "displayPricingToUser":
             switch (toolInvocation.state) {
               case "call":
                 return (
@@ -48,7 +50,54 @@ export function AIMessageToolDisplay({ messageParts, messageId }: Props) {
                 );
             }
             break;
-          }
+
+          case "displayLinkButtonToUser":
+            switch (toolInvocation.state) {
+              case "result":
+                const plans = toolInvocation.result as {
+                  url: string;
+                  caption: string;
+                };
+
+                return (
+                  <ButtonTool
+                    key={`${messageId}-part-${partIndex}-${callId}-result`}
+                    url={plans.url}
+                    caption={plans.caption}
+                    messageId={messageId}
+                    partIndex={partIndex}
+                    callId={callId}
+                  />
+                );
+            }
+            break;
+
+          case "getCalendarMeetingSlots":
+            switch (toolInvocation.state) {
+              case "call":
+                return (
+                  <div key={`${messageId}-part-${partIndex}-${callId}-call`}>
+                    <p>I&apos;m looking for a time</p>
+                  </div>
+                );
+              case "result":
+                const result = toolInvocation.result as {
+                  slots: Slots;
+                  start: string;
+                  end: string;
+                };
+
+                return (
+                  <CalMeetingSlotsTool
+                    key={`${messageId}-part-${partIndex}-${callId}-result`}
+                    slots={result.slots}
+                    messageId={messageId}
+                    partIndex={partIndex}
+                    callId={callId}
+                  />
+                );
+            }
+            break;
         }
       })}
     </>

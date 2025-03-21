@@ -37,6 +37,10 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
 
   // Initialize chat with stored messages or fallback
   const { status, append, setMessages } = useChat({
+    maxSteps: 5,
+    onToolCall({ toolCall }) {
+      console.log({ toolCall });
+    },
     ...options,
     initialMessages: storedMessages?.length
       ? storedMessages
@@ -44,8 +48,20 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
     async onFinish(message) {
       await db.messages.put(message);
       handleScrollToBottom();
+
+      console.log({ message });
+    },
+    headers: {
+      "X-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
+
+  // If no messages are stored, add the initial messages
+  useEffect(() => {
+    if (storedMessages?.length === 0) {
+      setMessages(options?.fallbackInitialMessages || []);
+    }
+  }, [storedMessages, options?.fallbackInitialMessages, setMessages]);
 
   // Set loading to false once we have the initial data
   useEffect(() => {

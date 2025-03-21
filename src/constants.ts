@@ -10,6 +10,7 @@ export type Plan = {
   features: string[];
   title: string;
   description: string;
+  paymentUrl: string;
 };
 
 export const PRICES_MAP: Record<PlanType, Plan> = {
@@ -21,6 +22,7 @@ export const PRICES_MAP: Record<PlanType, Plan> = {
     description:
       "Perfect for those who want to get their product out there quickly.",
     features: ["Code & Design", "Deployed and ready to go", "Feature-complete"],
+    paymentUrl: "https://stripe.com/checkout/12",
   },
   [PlanType.CUSTOM]: {
     type: PlanType.CUSTOM,
@@ -29,5 +31,6 @@ export const PRICES_MAP: Record<PlanType, Plan> = {
     title: "Product",
     description: "Perfect for those with ongoing needs and need for growth.",
     features: ["Pause anytime", "No lock-in", "No commitment"],
+    paymentUrl: "https://stripe.com/checkout/13",
   },
 };

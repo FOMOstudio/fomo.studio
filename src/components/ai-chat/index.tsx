@@ -21,16 +21,25 @@ type MessageItemProps = {
   message: Message;
   index: number;
   messages: Message[];
+  isMessageLoading: boolean;
 };
 
 const MessageItem = React.memo(
-  ({ message, index, messages }: MessageItemProps) => {
+  ({ message, index, messages, isMessageLoading }: MessageItemProps) => {
     const prevMessage = index > 0 ? messages[index - 1] : null;
     const isSameEntity = prevMessage && prevMessage.role === message.role;
     const spacingClass = isSameEntity ? "mt-1.5" : "mt-3";
 
+    const isLastMessage = index === messages.length - 1;
+    const hideAvatar =
+      isLastMessage && message.role === "assistant" && isMessageLoading;
+
     return (
       <React.Fragment>
+        <AIMessageToolDisplay
+          messageParts={message.parts}
+          messageId={message.id}
+        />
         {message.content && (
           <motion.div
             className={`flex md:max-w-md mx-auto ${
@@ -68,31 +77,27 @@ const MessageItem = React.memo(
             </AIMessage>
           </motion.div>
         )}
-        <AIMessageToolDisplay
-          messageParts={message.parts}
-          messageId={message.id}
-        />
-
         {((index < messages.length - 1 &&
           messages[index + 1].role !== message.role &&
           message.role === "assistant") ||
-          (index === messages.length - 1 && message.role === "assistant")) && (
-          <div className="flex items-center justify-center w-full">
-            <div className="flex items-center text-xs text-muted-foreground ml-1 mt-4 mb-3 max-w-md w-full">
-              <Avatar className="size-6 mr-2">
-                <AvatarImage src="/anthony.jpg" alt="AI Anthony" />
-                <AvatarFallback>AA</AvatarFallback>
-              </Avatar>
-              <span>
-                {message.createdAt
-                  ? formatDistanceToNow(new Date(message.createdAt), {
-                      addSuffix: true,
-                    })
-                  : "Just now"}
-              </span>
+          (index === messages.length - 1 && message.role === "assistant")) &&
+          !hideAvatar && (
+            <div className="flex items-center justify-center w-full">
+              <div className="flex items-center text-xs text-muted-foreground ml-1 mt-4 mb-3 max-w-md w-full">
+                <Avatar className="size-6 mr-2">
+                  <AvatarImage src="/anthony.jpg" alt="AI Anthony" />
+                  <AvatarFallback>AA</AvatarFallback>
+                </Avatar>
+                <span>
+                  {message.createdAt
+                    ? formatDistanceToNow(new Date(message.createdAt), {
+                        addSuffix: true,
+                      })
+                    : "Just now"}
+                </span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </React.Fragment>
     );
   }
@@ -100,29 +105,31 @@ const MessageItem = React.memo(
 
 MessageItem.displayName = "MessageItem";
 
+const getInitialMessages = (comesFrom: string | null) => [
+  {
+    id: "1",
+    content: `Hi, wandered from ${comesFrom || "the internet"} 👋`,
+    role: "assistant" as const,
+    createdAt: new Date(),
+  },
+  {
+    id: "2",
+    content: `Fomo is a studio that builds unique and polished AI experiences.`,
+    role: "assistant" as const,
+    createdAt: new Date(),
+  },
+  {
+    id: "hmmm-3-I-guess",
+    content: `I'm here to talk about our studio, you can ask anything!`,
+    role: "assistant" as const,
+    createdAt: new Date(),
+  },
+];
+
 export function AIChat({ comesFrom }: Props) {
   const { messages, handleSubmit, resetChatHistory, isMessageLoading } =
     usePersistedChat({
-      fallbackInitialMessages: [
-        {
-          id: "1",
-          content: `Hi, wandered from ${comesFrom || "the internet"} 👋`,
-          role: "assistant",
-          createdAt: new Date(),
-        },
-        {
-          id: "2",
-          content: `Fomo is a studio that builds unique and polished AI experiences.`,
-          role: "assistant",
-          createdAt: new Date(),
-        },
-        {
-          id: "hmmm-3-I-guess",
-          content: `I'm here to talk about our studio, you can ask anything!`,
-          role: "assistant",
-          createdAt: new Date(),
-        },
-      ],
+      fallbackInitialMessages: getInitialMessages(comesFrom),
     });
 
   const chatHasStarted = messages.length > 3;
@@ -180,6 +187,7 @@ export function AIChat({ comesFrom }: Props) {
               message={m}
               index={index}
               messages={messages}
+              isMessageLoading={isMessageLoading}
             />
           ))}
           {isMessageLoading && (
@@ -202,7 +210,7 @@ export function AIChat({ comesFrom }: Props) {
               }}
             >
               <AIMessage className="max-w-[80%] bg-muted rounded-2xl rounded-bl-sm">
-                <div className="flex items-center p-2 space-x-1">
+                <div className="flex items-center p-3 space-x-1">
                   <motion.div
                     className="size-1.5 bg-primary rounded-full"
                     animate={{ y: [0, -3, 0] }}
