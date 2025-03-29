@@ -10,6 +10,7 @@ import { getCalendarMeetingSlots } from "./tools/getCalendarMeetingSlots";
 import { displayPricingToUser } from "./tools/displayPricingToUser";
 import { getSystemPrompt } from "./prompt";
 import { displayLinkButtonToUser } from "./tools/displayLinkButtonToUser";
+import { bookMeetingSlot } from "./tools/bookMeetingSlot";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -60,6 +61,7 @@ export async function POST(req: Request) {
       displayPricingToUser,
       getCalendarMeetingSlots,
       displayLinkButtonToUser,
+      bookMeetingSlot,
     },
   });
 

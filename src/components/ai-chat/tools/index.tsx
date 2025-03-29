@@ -10,9 +10,14 @@ import { CalMeetingSlotsTool, Slots } from "./cal-meeting-slots";
 type Props = {
   messageId: string;
   messageParts: Message["parts"];
+  onAppendUserMessageToChat: (message: string) => void;
 };
 
-export function AIMessageToolDisplay({ messageParts, messageId }: Props) {
+export function AIMessageToolDisplay({
+  messageParts,
+  messageId,
+  onAppendUserMessageToChat,
+}: Props) {
   if (!messageParts) return <></>;
 
   return (
@@ -89,6 +94,7 @@ export function AIMessageToolDisplay({ messageParts, messageId }: Props) {
 
                 return (
                   <CalMeetingSlotsTool
+                    onAddMeetingSlotToChat={onAppendUserMessageToChat}
                     key={`${messageId}-part-${partIndex}-${callId}-result`}
                     slots={result.slots}
                     messageId={messageId}

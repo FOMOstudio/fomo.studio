@@ -2,6 +2,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import axios from "axios";
 import env from "@/env";
+import { DateTime } from "luxon";
 
 type Response = {
   data: {
@@ -28,27 +29,38 @@ export const bookMeetingSlot = tool({
       ),
   }),
   execute: async ({ timezone, slotStartDate, slotStartTime, email, name }) => {
-    // 1: Construct the date in the correct timezone
+    // 1: Construct the date in the specified timezone
+    const dateString = `${slotStartDate}T${slotStartTime}`;
+    const localDateTime = DateTime.fromISO(dateString, { zone: timezone });
 
-    // 2: Transform the date from the user's timezone to UTC
+    // 2: Transform the date from the specified timezone to UTC
+    const start = localDateTime.toUTC().toISO();
+
     // ISO 8601 datestring in UTC timezone representing available slot.
     // Example: 2024-01-01T00:00:00Z
-    const start = "";
+
+    console.log("booking slot", {
+      timezone,
+      slotStartDate,
+      slotStartTime,
+      email,
+      name,
+      start,
+    });
 
     // 3: Book the slot
     try {
       // Get available time slots in user's calendar and send them back to the frontend
-      const { data } = await axios.post<Response>(
+      await axios.post<Response>(
         `https://api.cal.com/v2/bookings`,
         {
           start,
           // The event type ID to book the slot for
-          eventTypeId: env.CAL_COM_EVENT_TYPE_ID,
+          eventTypeId: parseInt(env.CAL_COM_EVENT_TYPE_ID),
           attendee: {
             name,
             timeZone: timezone,
             email,
-            language: "en",
           },
         },
         {
@@ -59,9 +71,14 @@ export const bookMeetingSlot = tool({
         }
       );
 
-      return { data: data.data.slotDuration };
+      return { timezone, slotStartDate, slotStartTime };
     } catch (error) {
       console.error("error from getCalendarMeetingSlots", error);
+
+      return {
+        start,
+        error: `Failed to execute the booking: ${error}.`,
+      };
     }
   },
 });

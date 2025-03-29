@@ -22,10 +22,17 @@ type MessageItemProps = {
   index: number;
   messages: Message[];
   isMessageLoading: boolean;
+  onAppendUserMessageToChat: (message: string) => void;
 };
 
 const MessageItem = React.memo(
-  ({ message, index, messages, isMessageLoading }: MessageItemProps) => {
+  ({
+    message,
+    index,
+    messages,
+    isMessageLoading,
+    onAppendUserMessageToChat,
+  }: MessageItemProps) => {
     const prevMessage = index > 0 ? messages[index - 1] : null;
     const isSameEntity = prevMessage && prevMessage.role === message.role;
     const spacingClass = isSameEntity ? "mt-1.5" : "mt-3";
@@ -37,6 +44,7 @@ const MessageItem = React.memo(
     return (
       <React.Fragment>
         <AIMessageToolDisplay
+          onAppendUserMessageToChat={onAppendUserMessageToChat}
           messageParts={message.parts}
           messageId={message.id}
         />
@@ -84,7 +92,7 @@ const MessageItem = React.memo(
           !hideAvatar && (
             <div className="flex items-center justify-center w-full">
               <div className="flex items-center text-xs text-muted-foreground ml-1 mt-4 mb-3 max-w-md w-full">
-                <Avatar className="size-6 mr-2">
+                <Avatar className="size-8 mr-2">
                   <AvatarImage src="/anthony.jpg" alt="AI Anthony" />
                   <AvatarFallback>AA</AvatarFallback>
                 </Avatar>
@@ -168,7 +176,7 @@ export function AIChat({ comesFrom }: Props) {
     if (hasInitiallyScrolled.current) {
       scrollToBottom();
     }
-  }, [messages, isMessageLoading, scrollToBottom]);
+  }, [messages, isMessageLoading]);
 
   const handleShortcutClick = useCallback(
     (messageContent: string) => {
@@ -184,6 +192,7 @@ export function AIChat({ comesFrom }: Props) {
           {messages.map((m, index) => (
             <MessageItem
               key={m.id}
+              onAppendUserMessageToChat={handleShortcutClick}
               message={m}
               index={index}
               messages={messages}

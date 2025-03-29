@@ -14,7 +14,7 @@ export function PricingTool({ plans, messageId, partIndex, callId }: Props) {
   return (
     <>
       <motion.div
-        className={`mt-4 flex items-center justify-center w-full`}
+        className={`mt-4 flex items-center justify-center w-full mb-4`}
         initial={{
           opacity: 0,
           y: 20,

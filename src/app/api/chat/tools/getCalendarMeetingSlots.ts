@@ -107,8 +107,6 @@ export const getCalendarMeetingSlots = tool({
         1000
       );
 
-      console.log({ slots: data.data });
-
       return {
         slots: data.data,
         start,

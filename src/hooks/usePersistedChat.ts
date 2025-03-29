@@ -48,8 +48,6 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
     async onFinish(message) {
       await db.messages.put(message);
       handleScrollToBottom();
-
-      console.log({ message });
     },
     headers: {
       "X-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -58,10 +56,14 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
 
   // If no messages are stored, add the initial messages
   useEffect(() => {
-    if (storedMessages?.length === 0) {
-      setMessages(options?.fallbackInitialMessages || []);
+    if (
+      storedMessages?.length === 0 &&
+      isLoadingData &&
+      options?.fallbackInitialMessages
+    ) {
+      db.messages.bulkPut(options.fallbackInitialMessages);
     }
-  }, [storedMessages, options?.fallbackInitialMessages, setMessages]);
+  }, [storedMessages]);
 
   // Set loading to false once we have the initial data
   useEffect(() => {
@@ -116,5 +118,6 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
     isMessageLoading: status === "streaming" || status === "submitted",
     inputContent,
     setInputContent,
+    append,
   };
 }
