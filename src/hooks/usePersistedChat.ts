@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useChat, Message, UseChatOptions } from "@ai-sdk/react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 interface UsePersistedChatOptions
   extends Omit<UseChatOptions, "initialMessages"> {
   fallbackInitialMessages?: Message[];
+  apiDebounceMs?: number;
 }
 
 const handleScrollToBottom = () => {
@@ -20,7 +21,7 @@ const handleScrollToBottom = () => {
       });
 
       window.scrollBy({
-        top: 100, // Adjust this value to control how much extra scroll you want
+        top: 100,
         behavior: "smooth",
       });
     }
@@ -29,14 +30,19 @@ const handleScrollToBottom = () => {
 
 export function usePersistedChat(options?: UsePersistedChatOptions) {
   const [inputContent, setInputContent] = useState<string>("");
-
   const [isLoadingData, setIsLoading] = useState(true);
+  const [pendingMessages, setPendingMessages] = useState<Message[]>([]);
+  const apiDebounceMs = options?.apiDebounceMs ?? 500;
+
+  // Use refs instead of state for timeout to avoid re-renders
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const processingRef = useRef(false);
 
   // Fetch messages from IndexedDB
   const storedMessages = useLiveQuery(() => db.messages.toArray(), [], []);
 
   // Initialize chat with stored messages or fallback
-  const { status, append, setMessages } = useChat({
+  const { status, append, setMessages, stop } = useChat({
     maxSteps: 5,
     onToolCall({ toolCall }) {
       console.log({ toolCall });
@@ -54,33 +60,81 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
     },
   });
 
-  // If no messages are stored, add the initial messages
-  useEffect(() => {
-    if (
-      storedMessages?.length === 0 &&
-      isLoadingData &&
-      options?.fallbackInitialMessages
-    ) {
-      db.messages.bulkPut(options.fallbackInitialMessages);
-    }
-  }, [storedMessages]);
+  // Process pending messages function (not inside useEffect)
+  const processPendingMessages = useCallback(async () => {
+    if (pendingMessages.length === 0 || processingRef.current) return;
 
-  // Set loading to false once we have the initial data
-  useEffect(() => {
-    if (storedMessages !== undefined) {
-      setIsLoading(false);
+    processingRef.current = true;
+
+    try {
+      // If AI is currently responding, stop it
+      if (status === "streaming" || status === "submitted") {
+        stop();
+      }
+
+      // Take the most recent message
+      const lastMessage = pendingMessages[pendingMessages.length - 1];
+
+      // Clear pending messages
+      setPendingMessages([]);
+
+      // Send the message to API
+      await Promise.all([append(lastMessage), db.messages.put(lastMessage)]);
+
+      handleScrollToBottom();
+    } finally {
+      processingRef.current = false;
     }
-  }, [storedMessages]);
+  }, [pendingMessages, status, stop, append]);
+
+  // Watch for pending messages and trigger processing after debounce
+  useEffect(() => {
+    if (pendingMessages.length > 0) {
+      // Clear existing timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+
+      // Set new timeout
+      debounceTimeoutRef.current = setTimeout(() => {
+        processPendingMessages();
+      }, apiDebounceMs);
+    }
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [pendingMessages, apiDebounceMs, processPendingMessages]);
+
+  // Initialize default messages if no messages exist
+  useEffect(() => {
+    const initializeMessages = async () => {
+      if (storedMessages === undefined) return; // Still loading
+
+      if (
+        storedMessages.length === 0 &&
+        options?.fallbackInitialMessages?.length
+      ) {
+        await db.messages.bulkPut(options.fallbackInitialMessages);
+        setMessages(options.fallbackInitialMessages);
+      }
+
+      setIsLoading(false);
+    };
+
+    initializeMessages();
+  }, [storedMessages, options?.fallbackInitialMessages, setMessages]);
 
   // Method to reset the chat history
   const resetChatHistory = useCallback(async () => {
     await db.resetMessages();
     setMessages([]);
-    // Reset the chat state to initial state
-    if (options?.fallbackInitialMessages) {
-      // Add the fallback messages to the database
-      // Use put instead of add to handle potential duplicate keys
+
+    if (options?.fallbackInitialMessages?.length) {
       await db.messages.bulkPut(options.fallbackInitialMessages);
+      setMessages(options.fallbackInitialMessages);
     }
   }, [options?.fallbackInitialMessages, setMessages]);
 
@@ -94,19 +148,24 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
       createdAt: new Date(),
     };
 
-    handleScrollToBottom();
+    // Add message to UI immediately but queue for API
+    setPendingMessages((prev) => [...prev, message]);
 
-    await Promise.all([append(message), db.messages.put(message)]);
+    // Update stored messages for UI display
+    await db.messages.put(message);
 
     setInputContent("");
-
     handleScrollToBottom();
   };
 
   const sortedMessages = useMemo(() => {
-    return storedMessages?.sort((a, b) => {
-      if (!a.createdAt || !b.createdAt) return 0;
-      return a.createdAt.getTime() - b.createdAt.getTime();
+    if (!storedMessages) return [];
+
+    // Create a copy of the array before sorting to avoid modifying the original
+    return [...storedMessages].sort((a, b) => {
+      const timeA = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+      const timeB = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+      return timeA - timeB;
     });
   }, [storedMessages]);
 
@@ -115,9 +174,13 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
     isLoadingData,
     resetChatHistory,
     handleSubmit,
-    isMessageLoading: status === "streaming" || status === "submitted",
+    isMessageLoading:
+      status === "streaming" ||
+      status === "submitted" ||
+      pendingMessages.length > 0,
     inputContent,
     setInputContent,
     append,
+    stop,
   };
 }

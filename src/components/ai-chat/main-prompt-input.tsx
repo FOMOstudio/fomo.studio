@@ -21,6 +21,7 @@ type MainPromptInputProps = {
   onShortcutClick?: (text: string) => void;
   hideResetButton?: boolean;
   onResetChatHistory: () => void;
+  disabled?: boolean;
 };
 
 export const MainPromptInput = memo(function MainPromptInput({
@@ -29,6 +30,7 @@ export const MainPromptInput = memo(function MainPromptInput({
   onShortcutClick,
   onResetChatHistory,
   onSubmit,
+  disabled = false,
 }: MainPromptInputProps) {
   const [inputValue, setInputValue] = useState("");
 
@@ -137,7 +139,7 @@ export const MainPromptInput = memo(function MainPromptInput({
                 type="submit"
                 size="sm"
                 className="size-10 cursor-pointer rounded-full mb-0.5"
-                disabled={!inputValue.trim()}
+                disabled={!inputValue.trim() || disabled}
                 aria-label="Send"
                 onClick={handleSubmit}
               >

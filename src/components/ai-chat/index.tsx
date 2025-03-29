@@ -6,7 +6,7 @@ import {
 } from "@/components/ai-chat/message";
 import { MainPromptInput } from "./main-prompt-input";
 import { motion } from "motion/react";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, subSeconds } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePersistedChat } from "@/hooks/usePersistedChat";
 import React, { useCallback, useEffect, useRef } from "react";
@@ -118,19 +118,19 @@ const getInitialMessages = (comesFrom: string | null) => [
     id: "1",
     content: `Hi, wandered from ${comesFrom || "the internet"} 👋`,
     role: "assistant" as const,
-    createdAt: new Date(),
+    createdAt: subSeconds(new Date(), 30),
   },
   {
     id: "2",
     content: `Fomo is a studio that builds unique and polished AI experiences.`,
     role: "assistant" as const,
-    createdAt: new Date(),
+    createdAt: subSeconds(new Date(), 20),
   },
   {
     id: "hmmm-3-I-guess",
     content: `I'm here to talk about our studio, you can ask anything!`,
     role: "assistant" as const,
-    createdAt: new Date(),
+    createdAt: subSeconds(new Date(), 10),
   },
 ];
 

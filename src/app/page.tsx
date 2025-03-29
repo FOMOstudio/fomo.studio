@@ -1,5 +1,4 @@
 import { AnimatedIntro } from "@/components/animated-intro";
-import { cn } from "@/lib/utils";
 import { TopBar } from "@/components/top-bar";
 import { AIChat } from "@/components/ai-chat";
 import { headers } from "next/headers";
