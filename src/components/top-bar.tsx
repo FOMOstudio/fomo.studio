@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ProgressiveBlur } from "./progressive-blur";
+import { LogoScramble } from "./logo-scramble";
 
 export function TopBar() {
   return (
@@ -40,10 +41,8 @@ export function TopBar() {
                 </clipPath>
               </defs>
             </svg>
-            <span className="text-lg font-bold relative">
-              fomostudio
-              <span className="text-sm text-muted-foreground"> *</span>
-            </span>
+            <LogoScramble />
+            <span className="text-sm text-muted-foreground"> *</span>
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ import { usePersistedChat } from "@/hooks/usePersistedChat";
 import React, { useCallback, useEffect, useRef } from "react";
 import { AIMessageToolDisplay } from "./tools";
 import { Message } from "@ai-sdk/react";
+import { TooltipOnHover } from "../ui/tooltip";
 
 type Props = {
   comesFrom: string | null;
@@ -92,10 +93,25 @@ const MessageItem = React.memo(
           !hideAvatar && (
             <div className="flex items-center justify-center w-full">
               <div className="flex items-center text-xs text-muted-foreground ml-1 mt-4 mb-3 max-w-md w-full">
-                <Avatar className="size-8 mr-2">
-                  <AvatarImage src="/anthony.jpg" alt="AI Anthony" />
-                  <AvatarFallback>AA</AvatarFallback>
-                </Avatar>
+                <TooltipOnHover content="AI-ed Anthony">
+                  <div className="relative mr-2 group">
+                    <Avatar className="size-8">
+                      <AvatarImage src="/anthony.png" alt="AI Anthony" />
+                      <AvatarFallback>AI</AvatarFallback>
+                    </Avatar>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 612 612"
+                      className="absolute inset-0 group-hover:opacity-0 opacity-100 transition-opacity duration-300"
+                    >
+                      <path
+                        fill="#fff"
+                        d="M391.938 157.656c6.157-2.907 4.487-4.202 7.998 3.36 9.262 20.028-5.46 64.091-9.124 85.408l73.929 55.704c5.553 4.325 5.589 27.836-1.971 28.26-28.026-14.899-53.604-34.576-79.661-52.764l-23.466 72.245c-8.956 14.65-14.374-4.134-14.744-13.743-.462-12.347 11.696-72.74 10.002-76.184-16.598-13.541-36.309-27.339-51.329-42.461-4.184-4.221-17.191-16.022-5.205-19.116 11.987-3.094 50.764 25.011 62.501 30.654 3.142-.994 9.04-56.827 17.739-66.03 1.952-2.06 3.344-10.694 11.604-5.333h1.727Zm-146.537 48.513c6.157-2.908 13.797-6.293 17.308 1.269 9.262 20.027-13.043 62.843-16.707 84.16l73.928 55.704c5.554 4.325 5.59 27.836-1.97 28.261-28.026-14.899-53.604-34.577-79.661-52.765l-23.466 72.245c-8.957 14.65-14.374-4.134-14.744-13.743-.462-12.346 11.695-72.74 10.002-76.184-16.599-13.54-36.31-27.338-51.329-42.461-4.184-4.221-17.192-16.022-5.205-19.116 11.987-3.094 50.764 25.011 62.501 30.654 3.142-.994 12.426-53.084 21.125-62.288 1.952-2.059 5.629-4.487 8.207-5.713l.011-.023Z"
+                      />
+                    </svg>
+                  </div>
+                </TooltipOnHover>
                 <span>
                   {message.createdAt
                     ? formatDistanceToNow(new Date(message.createdAt), {

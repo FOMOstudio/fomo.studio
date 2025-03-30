@@ -8,12 +8,12 @@ const geistSans = Geist({
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist",
+  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "FOMO Studio — AI things for the internet",
+  title: "FOMO Studio — build unique and polished ai experiences",
   description:
     "A studio that builds unique and polished AI experiences for the internet.",
   metadataBase: new URL(`https://fomo.studio/`),

@@ -1,6 +1,6 @@
-'use client';
-import { type JSX, useEffect, useState } from 'react';
-import { motion, MotionProps } from 'motion/react';
+"use client";
+import { type JSX, useEffect, useState } from "react";
+import { motion, MotionProps } from "motion/react";
 
 export type TextScrambleProps = {
   children: string;
@@ -13,8 +13,7 @@ export type TextScrambleProps = {
   onScrambleComplete?: () => void;
 } & MotionProps;
 
-const defaultChars =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const defaultChars = "X-|()%$!@#^&*";
 
 export function TextScramble({
   children,
@@ -22,7 +21,7 @@ export function TextScramble({
   speed = 0.04,
   characterSet = defaultChars,
   className,
-  as: Component = 'p',
+  as: Component = "p",
   trigger = true,
   onScrambleComplete,
   ...props
@@ -42,12 +41,12 @@ export function TextScramble({
     let step = 0;
 
     const interval = setInterval(() => {
-      let scrambled = '';
+      let scrambled = "";
       const progress = step / steps;
 
       for (let i = 0; i < text.length; i++) {
-        if (text[i] === ' ') {
-          scrambled += ' ';
+        if (text[i] === " ") {
+          scrambled += " ";
           continue;
         }
 

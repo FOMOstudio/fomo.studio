@@ -1,19 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  ArrowUpIcon,
-  DollarSignIcon,
-  CalendarIcon,
-  HelpCircleIcon,
-  AwardIcon,
-} from "lucide-react";
+import { DotIcon } from "lucide-react";
 import { PromptSuggestion } from "./prompt-suggestion";
 import TextareaAutosize from "react-textarea-autosize";
 import { ProgressiveBlur } from "../progressive-blur";
 import { cn } from "@/lib/utils";
 import { useHotkeys } from "react-hotkeys-hook";
 import { memo, useState } from "react";
+import { TooltipOnHover } from "../ui/tooltip";
 
 type MainPromptInputProps = {
   onSubmit: (value: string) => void;
@@ -88,7 +83,7 @@ export const MainPromptInput = memo(function MainPromptInput({
                 onClick={() => handleSuggestionClick("Pricing")}
                 className="group"
               >
-                <DollarSignIcon className="text-primary/60 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                <DotIcon className="text-primary/60 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 Pricing
               </PromptSuggestion>
 
@@ -96,7 +91,7 @@ export const MainPromptInput = memo(function MainPromptInput({
                 onClick={() => handleSuggestionClick("Book an intro call")}
                 className="group"
               >
-                <CalendarIcon className="text-primary/60 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                <DotIcon className="text-primary/60 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 Book an intro call
               </PromptSuggestion>
 
@@ -104,7 +99,7 @@ export const MainPromptInput = memo(function MainPromptInput({
                 onClick={() => handleSuggestionClick("How do we work?")}
                 className="group"
               >
-                <HelpCircleIcon className="text-primary/60 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                <DotIcon className="text-primary/60 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 How do we work?
               </PromptSuggestion>
 
@@ -112,7 +107,7 @@ export const MainPromptInput = memo(function MainPromptInput({
                 onClick={() => handleSuggestionClick("Why working with us?")}
                 className="group"
               >
-                <AwardIcon className="text-primary/60 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                <DotIcon className="text-primary/60 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 Why working with us?
               </PromptSuggestion>
             </div>
@@ -135,30 +130,37 @@ export const MainPromptInput = memo(function MainPromptInput({
               />
             </div>
             <div className="pr-1 self-end">
-              <Button
-                type="submit"
-                size="sm"
-                className="size-10 cursor-pointer rounded-full mb-0.5 group"
-                disabled={!inputValue.trim() || disabled}
-                aria-label="Send"
-                onClick={handleSubmit}
+              <TooltipOnHover
+                content="Send message"
+                shortcuts={["enter"]}
+                side="top"
+                align="center"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 160 221"
-                  className="size-4 group-hover:-translate-y-0.5 transition-all duration-300"
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="size-10 cursor-pointer rounded-full mb-0.5 group"
+                  disabled={!inputValue.trim() || disabled}
+                  aria-label="Send"
+                  onClick={handleSubmit}
                 >
-                  <path
-                    fill="currentColor"
-                    d="M74.3406 31.6906c-15.77 16.08-24.97 31.03-45.85 52.84-3.19 3.33-18.60002 13.92-18.60002 13.92s-13.93-12.27-8.73-16.24c20.92002-22.1 37.91002-50.6 58.39002-72.61998 5.52-5.93 10.87-10.250005 19.54-9.5100051 9.67.8300001 13.49 10.2399851 18.99 16.0599851 15.1004 15.97 30.1304 27.41 46.5304 41.47 2.49 2.14 12.56 10.53 13.47 12.53 1.53 3.36 1.42 12.98-.73 16.22-1.74 2.63-5.86 8.52-6.1 8.81-5.42 6.4504-10.61 9.4004-10.61 9.4004s-20.07-16.2304-24.05-19.9404c-14.83-13.82-32.9904-34.75-42.2404-52.96l-.01.02Z"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M82.1306 87.9206c.9 1.08 2.16 13.6304 2.3 16.2004 1.26 23.1 1.25 53.98 0 77.08-.72 13.2-3.73 27.23-8.54 39.44-12.74-14.41-10.75-35.6-11.46-53.52-.82-20.67-2.26-42.21-1.08-63 .18-3.15.66-10.0504 1.25-12.7504 1.5-6.88 13.77-7.98 17.53-3.45Z"
-                  />
-                </svg>
-              </Button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 160 221"
+                    className="size-4 group-hover:-translate-y-0.5 transition-all duration-300"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M74.3406 31.6906c-15.77 16.08-24.97 31.03-45.85 52.84-3.19 3.33-18.60002 13.92-18.60002 13.92s-13.93-12.27-8.73-16.24c20.92002-22.1 37.91002-50.6 58.39002-72.61998 5.52-5.93 10.87-10.250005 19.54-9.5100051 9.67.8300001 13.49 10.2399851 18.99 16.0599851 15.1004 15.97 30.1304 27.41 46.5304 41.47 2.49 2.14 12.56 10.53 13.47 12.53 1.53 3.36 1.42 12.98-.73 16.22-1.74 2.63-5.86 8.52-6.1 8.81-5.42 6.4504-10.61 9.4004-10.61 9.4004s-20.07-16.2304-24.05-19.9404c-14.83-13.82-32.9904-34.75-42.2404-52.96l-.01.02Z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M82.1306 87.9206c.9 1.08 2.16 13.6304 2.3 16.2004 1.26 23.1 1.25 53.98 0 77.08-.72 13.2-3.73 27.23-8.54 39.44-12.74-14.41-10.75-35.6-11.46-53.52-.82-20.67-2.26-42.21-1.08-63 .18-3.15.66-10.0504 1.25-12.7504 1.5-6.88 13.77-7.98 17.53-3.45Z"
+                    />
+                  </svg>
+                </Button>
+              </TooltipOnHover>
             </div>
           </div>
         </div>
