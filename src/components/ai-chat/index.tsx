@@ -154,7 +154,7 @@ const getInitialMessages = (comesFrom: string | null) => [
     createdAt: subSeconds(new Date(), 20),
   },
   {
-    id: "hmmm-3-I-guess",
+    id: "3",
     content: `I'm here to talk about our studio, you can ask anything!`,
     role: "assistant" as const,
     createdAt: subSeconds(new Date(), 10),
@@ -248,31 +248,30 @@ export function AIChat({ comesFrom }: Props) {
               <AIMessage className="max-w-[80%] bg-muted rounded-2xl rounded-bl-sm">
                 <div className="flex items-center p-3 space-x-1">
                   <motion.div
-                    className="size-1.5 bg-primary rounded-full"
-                    animate={{ y: [0, -3, 0] }}
+                    className="size-2 rounded-full bg-primary/50"
+                    animate={{ scale: [0.85, 1.2, 0.85] }}
                     transition={{
+                      duration: 1.6,
                       repeat: Infinity,
-                      duration: 1,
                       ease: "easeInOut",
-                      delay: 0,
                     }}
                   />
                   <motion.div
-                    className="size-1.5 bg-primary rounded-full"
-                    animate={{ y: [0, -3, 0] }}
+                    className="size-2 rounded-full bg-primary/50"
+                    animate={{ scale: [1, 0.8, 1] }}
                     transition={{
+                      duration: 1.6,
                       repeat: Infinity,
-                      duration: 1,
                       ease: "easeInOut",
                       delay: 0.2,
                     }}
                   />
                   <motion.div
-                    className="size-1.5 bg-primary rounded-full"
-                    animate={{ y: [0, -3, 0] }}
+                    className="size-2 rounded-full bg-primary/50"
+                    animate={{ scale: [0.9, 1.15, 0.9] }}
                     transition={{
+                      duration: 1.6,
                       repeat: Infinity,
-                      duration: 1,
                       ease: "easeInOut",
                       delay: 0.4,
                     }}
@@ -281,11 +280,11 @@ export function AIChat({ comesFrom }: Props) {
               </AIMessage>
             </motion.div>
           )}
-          <div ref={messagesEndRef} className="h-[20px]" />
+          <div ref={messagesEndRef} />
         </div>
       </div>
-
       <MainPromptInput
+        disabled={isMessageLoading}
         onSubmit={handleSubmit}
         hideShortcuts={chatHasStarted}
         onShortcutClick={handleShortcutClick}

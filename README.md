@@ -1,8 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fomo Studio Landing Page
+
+A modern, interactive landing page for Fomo Studio featuring an AI chatbot that simulates conversation with the agency founder. This project showcases a sleek design with animated elements and a functional AI assistant that can provide information about services, pricing, and even schedule meetings.
+
+## Features
+
+- **Interactive AI Chat**: A GPT-4o powered chatbot that represents the agency's founder
+- **Animated Intro**: Stylish text scramble animations for a memorable first impression
+- **Meeting Scheduling**: Integration with calendar tools to book meetings directly through the chat
+- **Pricing Information**: Dynamic display of service packages and pricing
+- **Responsive Design**: Fully responsive layout that works on all devices
+- **Modern UI**: Built with Next.js, React, and Tailwind CSS
+
+## Chatbot Capabilities
+
+The AI assistant can:
+
+- Provide information about Fomo Studio's services and team
+- Display pricing packages when users inquire about projects
+- Schedule meetings by showing available calendar slots
+- Answer questions about the agency's expertise and past projects
+- Generate link buttons for external resources
+- Maintain a conversational, branded tone throughout interactions
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **AI Integration**: OpenAI GPT-4o
+- **Styling**: Tailwind CSS, Shadcn UI components
+- **Rate Limiting**: Upstash Redis
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. Copy `.env.example` to `.env.local` and add your API keys
+4. Run the development server:
 
 ```bash
 npm run dev
@@ -10,27 +52,19 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Required environment variables:
 
-## Learn More
+- `OPENAI_API_KEY` - Your OpenAI API key
+- `UPSTASH_REDIS_REST_URL` - Upstash Redis URL for rate limiting
+- `UPSTASH_REDIS_REST_TOKEN` - Upstash Redis token
+- Other service-specific variables as needed for calendar integration
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.

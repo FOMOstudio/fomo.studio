@@ -11,16 +11,13 @@ export function AnimatedIntro({
   onAnimationComplete?: () => void;
 }) {
   const [isDone, setIsDone] = useState<boolean>(false);
-
-  // Fixed color scheme
   const colorScheme = { bg: "bg-primary", text: "text-primary-foreground" };
 
   useEffect(() => {
-    // Set timeout to end the animation - shorter duration
     const doneTimer = setTimeout(() => {
       setIsDone(true);
       if (onAnimationComplete) onAnimationComplete();
-    }, 3000); // Reduced from 6000ms to 3000ms
+    }, 3000);
 
     return () => {
       clearTimeout(doneTimer);

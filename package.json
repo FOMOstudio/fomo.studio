@@ -1,7 +1,9 @@
 {
   "name": "fomostudio",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "license": "MIT",
+  "description": "A modern, interactive landing page for Fomo Studio featuring an AI chatbot",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -52,5 +54,9 @@
     "eslint-config-next": "15.2.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/fomostudio"
   }
 }

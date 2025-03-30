@@ -26,7 +26,7 @@ const ratelimit = new Ratelimit({
 export async function POST(req: Request) {
   const identifier = "chat-api";
 
-  // Get the timezone from the headers, its being sent by the frontend
+  // Get the timezone from the headers
   const headersList = await headers();
   const timezone = headersList.get("X-Timezone");
 
