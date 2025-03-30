@@ -33,6 +33,7 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
   const [isLoadingData, setIsLoading] = useState(true);
   const [pendingMessages, setPendingMessages] = useState<Message[]>([]);
   const apiDebounceMs = options?.apiDebounceMs ?? 500;
+  const initializedRef = useRef(false);
 
   // Use refs instead of state for timeout to avoid re-renders
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -48,9 +49,8 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
       console.log({ toolCall });
     },
     ...options,
-    initialMessages: storedMessages?.length
-      ? storedMessages
-      : options?.fallbackInitialMessages || [],
+    // Only use empty array initially - we'll set proper messages after DB check
+    initialMessages: [],
     async onFinish(message) {
       await db.messages.put(message);
       handleScrollToBottom();
@@ -108,15 +108,19 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
     };
   }, [pendingMessages, apiDebounceMs, processPendingMessages]);
 
-  // Initialize default messages if no messages exist
+  // Initialize messages from DB or fallback, but only once
   useEffect(() => {
     const initializeMessages = async () => {
-      if (storedMessages === undefined) return; // Still loading
+      // Skip if we're still loading or already initialized
+      if (storedMessages === undefined || initializedRef.current) return;
 
-      if (
-        storedMessages.length === 0 &&
-        options?.fallbackInitialMessages?.length
-      ) {
+      initializedRef.current = true;
+
+      if (storedMessages.length > 0) {
+        // We have messages in DB, use those
+        setMessages(storedMessages);
+      } else if (options?.fallbackInitialMessages?.length) {
+        // No messages in DB, use fallback
         await db.messages.bulkPut(options.fallbackInitialMessages);
         setMessages(options.fallbackInitialMessages);
       }

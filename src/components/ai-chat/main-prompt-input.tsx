@@ -56,8 +56,8 @@ export const MainPromptInput = memo(function MainPromptInput({
 
   return (
     <>
-      <div className="w-full sticky bottom-0 right-0 left-0 z-[1000] px-4 md:px-0">
-        <div className="w-full relative flex flex-col space-y-4 items-center h-fit py-4">
+      <div className="w-full sticky bottom-0 right-0 left-0 z-[1000] md:px-0">
+        <div className="w-full relative flex flex-col space-y-4 items-center h-fit py-4 px-4">
           <ProgressiveBlur
             className={cn(
               "pointer-events-none absolute left-0 right-0 top-0 z-[1000] h-[80px] w-full transition-all duration-100"
@@ -117,7 +117,11 @@ export const MainPromptInput = memo(function MainPromptInput({
               <TextareaAutosize
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Type a message or click a suggestion..."
+                placeholder={
+                  !hideShortcuts
+                    ? "Type a message or click a suggestion..."
+                    : "Type a message..."
+                }
                 cols={1}
                 maxLength={400}
                 minLength={2}
