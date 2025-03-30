@@ -2,17 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { geolocation } from "@vercel/functions";
 
 export function middleware(request: NextRequest) {
-  const requestHeaders = new Headers(request.headers);
+  const geo = geolocation(request);
 
-  const { city, country } = geolocation(request);
+  const country = geo.country;
+  const city = geo.city;
+  const region = geo.countryRegion;
 
-  const comesFrom = city || country || "the internet";
+  const comesFrom = city || country || region || "the internet";
 
-  requestHeaders.set("x-comes-from", comesFrom);
+  // Create a new response rather than modifying the request
+  const response = NextResponse.next();
 
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  // Set the header on the response instead
+  response.headers.set("x-comes-from", comesFrom);
+
+  return response;
 }
