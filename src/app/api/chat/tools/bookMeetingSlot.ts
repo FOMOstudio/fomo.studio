@@ -36,18 +36,6 @@ export const bookMeetingSlot = tool({
     // 2: Transform the date from the specified timezone to UTC
     const start = localDateTime.toUTC().toISO();
 
-    // ISO 8601 datestring in UTC timezone representing available slot.
-    // Example: 2024-01-01T00:00:00Z
-
-    console.log("booking slot", {
-      timezone,
-      slotStartDate,
-      slotStartTime,
-      email,
-      name,
-      start,
-    });
-
     // 3: Book the slot
     try {
       // Get available time slots in user's calendar and send them back to the frontend

@@ -7,12 +7,14 @@ import {
 import { MainPromptInput } from "./main-prompt-input";
 import { motion } from "motion/react";
 import { formatDistanceToNow, subSeconds } from "date-fns";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { usePersistedChat } from "@/hooks/usePersistedChat";
 import React, { useCallback, useEffect, useRef } from "react";
 import { AIMessageToolDisplay } from "./tools";
 import { Message } from "@ai-sdk/react";
 import { TooltipOnHover } from "../ui/tooltip";
+import Image from "next/image";
+import anthonyImage from "../../../public/anthony.png";
 
 type Props = {
   comesFrom: string | null;
@@ -96,7 +98,16 @@ const MessageItem = React.memo(
                 <TooltipOnHover content="AI-ed Anthony">
                   <div className="relative mr-2 group">
                     <Avatar className="size-8">
-                      <AvatarImage src="/anthony.png" alt="AI Anthony" />
+                      <Image
+                        src={anthonyImage.src}
+                        placeholder="blur"
+                        blurDataURL={anthonyImage.blurDataURL}
+                        width={anthonyImage.width}
+                        height={anthonyImage.height}
+                        alt="AI Anthony"
+                        priority
+                        className="aspect-square size-full"
+                      />
                       <AvatarFallback>AI</AvatarFallback>
                     </Avatar>
                     <svg

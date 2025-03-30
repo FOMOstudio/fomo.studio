@@ -28,7 +28,7 @@ export const metadata: Metadata = {
       {
         rel: "icon",
         type: "image/png",
-        url: `https://fomo.studio/icons/favicon.png`,
+        url: `https://thefomo.studio/icon.png`,
       },
     ],
   },
@@ -40,14 +40,6 @@ export const metadata: Metadata = {
     title: `FOMO Studio - AI things for the internet`,
     description:
       "A studio that builds unique and polished AI experiences for the internet.",
-    images: [
-      {
-        url: `https://fomo.studio/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: `FOMO Studio Open Graph Image`,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -55,7 +47,6 @@ export const metadata: Metadata = {
     description:
       "A studio that builds unique and polished AI experiences for the internet.",
     creator: "@fomo_studio",
-    images: [`https://fomo.studio/twitter-image.png`],
   },
   robots: {
     index: true,
