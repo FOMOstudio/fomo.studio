@@ -120,9 +120,11 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
         // We have messages in DB, use those
         setMessages(storedMessages);
       } else if (options?.fallbackInitialMessages?.length) {
-        // No messages in DB, use fallback
-        await db.messages.bulkPut(options.fallbackInitialMessages);
-        setMessages(options.fallbackInitialMessages);
+        // Use the atomic transaction method to safely add initial messages
+        const resultMessages = await db.safelyAddInitialMessages(
+          options.fallbackInitialMessages
+        );
+        setMessages(resultMessages);
       }
 
       setIsLoading(false);
@@ -137,8 +139,10 @@ export function usePersistedChat(options?: UsePersistedChatOptions) {
     setMessages([]);
 
     if (options?.fallbackInitialMessages?.length) {
-      await db.messages.bulkPut(options.fallbackInitialMessages);
-      setMessages(options.fallbackInitialMessages);
+      const resultMessages = await db.safelyAddInitialMessages(
+        options.fallbackInitialMessages
+      );
+      setMessages(resultMessages);
     }
   }, [options?.fallbackInitialMessages, setMessages]);
 

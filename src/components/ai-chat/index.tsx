@@ -140,26 +140,31 @@ const MessageItem = React.memo(
 
 MessageItem.displayName = "MessageItem";
 
-const getInitialMessages = (comesFrom: string | null) => [
-  {
-    id: "1",
-    content: `Hi, wandered from ${comesFrom || "the internet"} 👋`,
-    role: "assistant" as const,
-    createdAt: subSeconds(new Date(), 30),
-  },
-  {
-    id: "2",
-    content: `Fomo is a studio that builds unique and polished AI experiences.`,
-    role: "assistant" as const,
-    createdAt: subSeconds(new Date(), 20),
-  },
-  {
-    id: "3",
-    content: `I'm here to talk about our studio, you can ask anything!`,
-    role: "assistant" as const,
-    createdAt: subSeconds(new Date(), 10),
-  },
-];
+const getInitialMessages = (comesFrom: string | null) => {
+  const now = new Date();
+  const timestamp = now.getTime();
+
+  return [
+    {
+      id: `assistant-${timestamp}-1`,
+      content: `Hi, wandered from ${comesFrom || "the internet"} 👋`,
+      role: "assistant" as const,
+      createdAt: subSeconds(now, 30),
+    },
+    {
+      id: `assistant-${timestamp}-2`,
+      content: `Fomo is a studio that builds unique and polished AI experiences.`,
+      role: "assistant" as const,
+      createdAt: subSeconds(now, 20),
+    },
+    {
+      id: `assistant-${timestamp}-3`,
+      content: `I'm here to talk about our studio, you can ask anything!`,
+      role: "assistant" as const,
+      createdAt: subSeconds(now, 10),
+    },
+  ];
+};
 
 export function AIChat({ comesFrom }: Props) {
   const { messages, handleSubmit, resetChatHistory, isMessageLoading } =
