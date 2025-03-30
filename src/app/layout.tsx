@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FOMO Studio — build unique and polished ai experiences",
+  title: "fomo studio — build unique and polished ai experiences",
   description:
     "A studio that builds unique and polished AI experiences for the internet.",
-  metadataBase: new URL(`https://fomo.studio/`),
+  metadataBase: new URL(`https://thefomo.studio/`),
   alternates: {
     canonical: `/`,
   },
@@ -35,15 +35,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: `https://fomo.studio/`,
-    siteName: "FOMO Studio",
-    title: `FOMO Studio - AI things for the internet`,
+    url: `https://thefomo.studio/`,
+    siteName: "fomo studio",
+    title: `fomo studio - build unique and polished ai experiences`,
     description:
       "A studio that builds unique and polished AI experiences for the internet.",
   },
   twitter: {
     card: "summary_large_image",
-    title: `FOMO Studio - AI things for the internet`,
+    title: `fomo studio - build unique and polished ai experiences`,
     description:
       "A studio that builds unique and polished AI experiences for the internet.",
     creator: "@fomo_studio",
