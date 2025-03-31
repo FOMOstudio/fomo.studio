@@ -22,7 +22,8 @@ export const PRICES_MAP: Record<PlanType, Plan> = {
     description:
       "Perfect for those who want to get their product out there quickly.",
     features: ["Code & Design", "Deployed and ready to go", "Feature-complete"],
-    paymentUrl: "https://stripe.com/checkout/12",
+    paymentUrl:
+      "https://getorchestra.com/api/stripe/checkout-session-link/fomo?prices=price_1R8g2KGqWjUMYSBYw7yZbq18&one_time=true",
   },
   [PlanType.CUSTOM]: {
     type: PlanType.CUSTOM,
@@ -30,7 +31,13 @@ export const PRICES_MAP: Record<PlanType, Plan> = {
     interval: "monthly",
     title: "Product",
     description: "Perfect for those with ongoing needs and need for growth.",
-    features: ["Pause anytime", "No lock-in", "No commitment"],
-    paymentUrl: "https://stripe.com/checkout/13",
+    features: [
+      "One feature at a time",
+      "Pause anytime",
+      "No lock-in",
+      "No commitment",
+    ],
+    paymentUrl:
+      "https://getorchestra.com/api/stripe/checkout-session-link/fomo?prices=price_1R8g4aGqWjUMYSBYfgMKSVnT",
   },
 };
