@@ -8,13 +8,16 @@ export function middleware(request: NextRequest) {
   const city = geo.city;
   const region = geo.countryRegion;
 
-  const comesFrom = city || country || region || "the internet";
+  const comesFrom = country || city || region || "the internet";
 
   // Create a new response rather than modifying the request
   const response = NextResponse.next();
 
-  // Set the header on the response instead
-  response.headers.set("x-comes-from", comesFrom);
+  // Encode non-ASCII characters in the header value
+  const encodedComesFrom = encodeURIComponent(comesFrom);
+
+  // Set the encoded value in the header
+  response.headers.set("x-comes-from", encodedComesFrom);
 
   return response;
 }

@@ -1,38 +1,15 @@
-"use client";
-
-import { AnimatedIntro } from "@/components/animated-intro";
 import { TopBar } from "@/components/top-bar";
-import { AIChat } from "@/components/ai-chat";
-import { useState, useEffect } from "react";
+import { headers } from "next/headers";
+import Core from "@/components/core";
 
-export default function Landing() {
-  const [animationComplete, setAnimationComplete] = useState(false);
-  const [comesFrom, setComesFrom] = useState<string | null>(null);
-
-  // Using headers in a client component requires an async function
-  async function getHeaders() {
-    const res = await fetch("/api/headers");
-    const data = await res.json();
-    return data.comesFrom;
-  }
-
-  // Fetch headers when component mounts
-  useEffect(() => {
-    getHeaders().then((comesFrom) => setComesFrom(comesFrom));
-  }, []);
-
-  const handleAnimationComplete = () => {
-    setAnimationComplete(true);
-  };
+export default async function Landing() {
+  const headersList = await headers();
+  const comesFrom = headersList.get("x-comes-from");
 
   return (
     <>
       <TopBar />
-      <AnimatedIntro onAnimationComplete={handleAnimationComplete} />
-
-      <div className="flex flex-col items-center justify-center min-h-[20vh] w-screen pt-20"></div>
-
-      {animationComplete && <AIChat comesFrom={comesFrom} />}
+      <Core comesFrom={decodeURIComponent(comesFrom || "the internet")} />
     </>
   );
 }
