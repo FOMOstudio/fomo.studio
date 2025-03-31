@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const city = geo.city;
   const region = geo.countryRegion;
 
-  const comesFrom = country || city || region || "the internet";
+  const comesFrom = city || country || region || "the internet";
 
   // Create a new response rather than modifying the request
   const response = NextResponse.next();
