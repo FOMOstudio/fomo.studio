@@ -26,6 +26,9 @@ dependencies:
   '@upstash/redis':
     specifier: ^1.34.5
     version: 1.34.5
+  '@vercel/analytics':
+    specifier: ^1.5.0
+    version: 1.5.0(next@15.2.1)(react@19.0.0)
   '@vercel/functions':
     specifier: ^2.0.0
     version: 2.0.0
@@ -1410,6 +1413,36 @@ packages:
     resolution: {integrity: sha512-ZsYy1AX89OWQIGGQcO8CDBoWyLuVuvuJdjLKfj5WYxnhzYBzYb8E26gbvLO1lVlhVBAIuFX/k0LNjtv7wn2bcQ==}
     dependencies:
       crypto-js: 4.2.0
+    dev: false
+
+  /@vercel/analytics@1.5.0(next@15.2.1)(react@19.0.0):
+    resolution: {integrity: sha512-MYsBzfPki4gthY5HnYN7jgInhAZ7Ac1cYDoRWFomwGHWEX7odTEzbtg9kf/QSo7XEsEAqlQugA6gJ2WS2DEa3g==}
+    peerDependencies:
+      '@remix-run/react': ^2
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      next: 15.2.1(react-dom@19.0.0)(react@19.0.0)
+      react: 19.0.0
     dev: false
 
   /@vercel/functions@2.0.0:
